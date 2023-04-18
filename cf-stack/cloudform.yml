@@ -1,0 +1,18 @@
+AWSTemplateFormatVersion: 2010-09-09
+Resources:
+  Bucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: STD21028
+
+  BucketNameSSM:
+    Type: AWS::SSM:Parameter
+    Properties:
+      Name: BucketName
+      Value: !Ref Bucket
+
+  BucketArnSSM:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Name: BucketArn
+      Value: !GetAtt Bucket.Arn
