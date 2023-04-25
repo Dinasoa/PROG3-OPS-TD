@@ -1,7 +1,18 @@
 AWSTemplateFormatVersion: 2010-09-09
 Description: S3 provision
 
+
 Resources:
+  Database: 
+    Type: AWS::RDS::DBInstance
+    Properties:
+      DBName: myDatabase
+      MasterUsername: !Sub '{{resolve:ssm:/database/postgres/username}}'
+      MasterPassword: !Sub '{{resolve:ssm:/database/postgres/password}}'
+      Engine: postgres
+      DBInstanceClass: db.t2.micro
+      AllocatedStorage: "20"
+
   Bucket:
     Type: AWS::S3::Bucket
     Properties:
@@ -22,3 +33,24 @@ Resources:
         Type: String
         Value: !GetAtt Bucket.Arn
       DependsOn: Bucket
+
+  Outputs: 
+    DatabaseName: 
+      Value: !Ref Database
+
+    DatabaseURL: 
+      Value:
+        Fn::Join:
+          - ''
+          - - jdbc:postgresql://
+            - Fn::GetAtt:
+                - Database
+                - Endpoint.Address
+            - ':'
+            - Fn::GetAtt:
+                - Database
+                - Endpoint.Port
+            - '/'
+            - !Ref Database
+
+

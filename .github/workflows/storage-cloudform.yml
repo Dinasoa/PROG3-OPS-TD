@@ -20,7 +20,7 @@ jobs:
             aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
             aws-region: eu-west-3
 
-      - name: deploy s3 stack
+      - name: deploy storage stack
         uses: aws-actions/aws-cloudformation-github-deploy@v1
         with:
             name: cloudformation-stack
